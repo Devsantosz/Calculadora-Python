@@ -48,3 +48,21 @@ class MainApp(App):
 
         return main_layout
 
+    def on_button_press(self, instance):
+        current = self.solution.text
+        button_text = instance.text
+
+        if button_text == "C":
+            self.solution.text = ""
+            return
+
+        if current and (self.last_was_operator and button_text in self.operators):
+            return
+
+        if button_text == "." and "." in current:
+            return
+
+        self.solution.text += button_text
+        self.last_was_operator = button_text in self.operators
+        self.last_button = button_text
+
