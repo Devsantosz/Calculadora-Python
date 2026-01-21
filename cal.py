@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
+from kivy.graphics import Color, Rectangle, RoundedRectangle
 
 
 class MainApp(App):
@@ -10,13 +11,23 @@ class MainApp(App):
         self.last_was_operator = False
         self.last_button = None
 
-        main_layout = BoxLayout(orientation="vertical")
+        main_layout = BoxLayout(orientation="vertical", padding=10, spacing=5)
+
+        with main_layout.canvas.before:
+            Color(0.5, 0.5, 0.5, 1) # cor do fundo
+            self.bg_rect = Rectangle(pos=main_layout.pos, size=main_layout.size)
+
+        main_layout.bind(pos=self._update_bg, size=self._update_bg)
 
         self.solution = TextInput(
             multiline=False,
             readonly=True,
             halign="right",
-            font_size=55
+            font_size=60,
+            padding_y=(10),
+            background_color=(1, 1, 1, 1),
+            foreground_color=(0, 0, 0, 1),
+            
         )
 
         main_layout.add_widget(self.solution)
@@ -52,8 +63,16 @@ class MainApp(App):
         current = self.solution.text
         button_text = instance.text
 
+        if self.solution.text == "Erro" and button_text.isdigit():
+            self.solution.text = ""
+            return
+
         if button_text == "C":
             self.solution.text = ""
+            return
+        
+        if current == "0" and button_text.isdigit():
+            self.solution.text = button_text
             return
 
         if current and (self.last_was_operator and button_text in self.operators):
@@ -72,4 +91,9 @@ class MainApp(App):
         except Exception:
             self.solution.text = "Erro"
 
+    def _update_bg(self, instance, value):
+        self.bg_rect.pos = instance.pos
+        self.bg_rect.size = instance.size
 
+if __name__ == "__main__":
+    MainApp().run()
