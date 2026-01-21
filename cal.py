@@ -66,3 +66,10 @@ class MainApp(App):
         self.last_was_operator = button_text in self.operators
         self.last_button = button_text
 
+    def on_solution(self, instance):
+        try:
+            self.solution.text = str(eval(self.solution.text))
+        except Exception:
+            self.solution.text = "Erro"
+
+
