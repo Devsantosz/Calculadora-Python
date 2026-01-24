@@ -8,6 +8,7 @@ from kivy.core.window import Window
 Window.set_icon("cal.png")
 
 class MainApp(App):
+    title = "Calculadora"
     def build(self):
         self.operators = ["/", "*", "+", "-"]
         self.last_was_operator = False
