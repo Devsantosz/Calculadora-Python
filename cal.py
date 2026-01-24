@@ -3,7 +3,9 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.graphics import Color, Rectangle, RoundedRectangle
+from kivy.core.window import Window
 
+Window.set_icon("cal.png")
 
 class MainApp(App):
     def build(self):
@@ -11,10 +13,29 @@ class MainApp(App):
         self.last_was_operator = False
         self.last_button = None
 
+        Window.size = (360, 640)
+        Window.minimum_width = 360
+        Window.minimum_height = 640
+
+        TARGET_RATIO = 9 / 16
+
+        def keep_ratio(window, width, height):
+            ratio = width / height
+
+            if ratio > TARGET_RATIO:
+                width = height * TARGET_RATIO
+            else:
+                height = width / TARGET_RATIO
+
+            Window.size = (int(width), int(height))
+
+        Window.bind(on_resize=keep_ratio)
+
+
         main_layout = BoxLayout(orientation="vertical", padding=10, spacing=5)
 
         with main_layout.canvas.before:
-            Color(0.5, 0.5, 0.5, 1) # cor do fundo
+            Color(0.2, 0.2, 0.2, 1) # cor do fundo
             self.bg_rect = Rectangle(pos=main_layout.pos, size=main_layout.size)
 
         main_layout.bind(pos=self._update_bg, size=self._update_bg)
@@ -25,9 +46,8 @@ class MainApp(App):
             halign="right",
             font_size=60,
             padding_y=(10),
-            background_color=(1, 1, 1, 1),
-            foreground_color=(0, 0, 0, 1),
-            
+            background_color=(0.8, 0.8, 0.8, 1),
+            foreground_color=(0, 0, 0, 1), 
         )
 
         main_layout.add_widget(self.solution)
@@ -45,6 +65,8 @@ class MainApp(App):
                 button = Button(
                     text=label,
                     pos_hint={"center_x": 0.5, "center_y": 0.5},
+                    background_color=(0.7, 0.7, 0.7, 1),
+
                 )
                 button.bind(on_press=self.on_button_press)
                 h_layout.add_widget(button)
@@ -52,7 +74,8 @@ class MainApp(App):
 
         equals_button = Button(
             text="=",
-            pos_hint={"center_x": 0.5, "center_y": 0.5}
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
+            background_color=(0.7, 0.7, 0.7, 1)
         )
         equals_button.bind(on_press=self.on_solution)
         main_layout.add_widget(equals_button)
